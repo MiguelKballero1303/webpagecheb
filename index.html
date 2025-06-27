@@ -237,24 +237,59 @@
       <i class="fas fa-comment-dots"></i>
     </button>
 
-    <div id="chatbot-window">
-      <div id="chatbot-header">CaminoBot</div>
-      <div id="chatbot-messages">
-        <p><strong>CaminoBot:</strong> ¡Hola! ¿En qué puedo ayudarte hoy?</p>
-      </div>
-      <div id="chatbot-input">
-        <input type="text" placeholder="Escribe tu mensaje..." />
-        <button><i class="fa fa-paper-plane"></i></button>
-      </div>
-    </div>
-  </div>
+	<div id="chatbot-window">
+	  <div id="chatbot-header">CaminoBot</div>
+	  <div id="chatbot-messages">
+	    <p><strong>CaminoBot:</strong> ¡Hola! ¿En qué puedo ayudarte hoy?</p>
+	  </div>
+	  <div id="chatbot-input">
+	    <input id="chat-input" type="text" placeholder="Escribe tu mensaje..." />
+	    <button id="send-btn"><i class="fa fa-paper-plane"></i></button>
+	  </div>
+	</div>
+	
+	<script>
+	  const input = document.getElementById("chat-input");
+	  const button = document.getElementById("send-btn");
+	  const messages = document.getElementById("chatbot-messages");
+	
+	  async function enviarMensaje() {
+	    const texto = input.value.trim();
+	    if (!texto) return;
+	
+	    // Mostrar mensaje del usuario
+	    const mensajeUsuario = document.createElement("p");
+	    mensajeUsuario.innerHTML = `<strong>Tú:</strong> ${texto}`;
+	    messages.appendChild(mensajeUsuario);
+	    input.value = "";
+	
+	    // Llamar a tu backend con fetch
+	    try {
+	      const respuesta = await fetch("http://0.0.0.0:8000/chat", {
+	        method: "POST",
+	        headers: { "Content-Type": "application/json" },
+	        body: JSON.stringify({ mensaje: texto })
+	      });
+	
+	      const data = await respuesta.json();
+	      const mensajeBot = document.createElement("p");
+	      mensajeBot.innerHTML = `<strong>CaminoBot:</strong> ${data.respuesta}`;
+	      messages.appendChild(mensajeBot);
+	      messages.scrollTop = messages.scrollHeight;
+	
+	    } catch (error) {
+	      const errorBot = document.createElement("p");
+	      errorBot.innerHTML = `<strong>CaminoBot:</strong> Lo siento, hubo un problema.`;
+	      messages.appendChild(errorBot);
+	    }
+	  }
+	
+	  button.onclick = enviarMensaje;
+	  input.addEventListener("keypress", e => {
+	    if (e.key === "Enter") enviarMensaje();
+	  });
+	</script>
 
-  <script>
-    document.getElementById("chatbot-btn").onclick = () => {
-      const win = document.getElementById("chatbot-window");
-      win.style.display = win.style.display === "none" || win.style.display === "" ? "flex" : "none";
-    };
-  </script>
 
   <script src="assets/js/jquery.min.js"></script>
   <script src="assets/js/jquery.dropotron.min.js"></script>
