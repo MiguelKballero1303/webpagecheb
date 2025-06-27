@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+  <title>Camino Hacia el Bienestar - Consultorio Psicológico</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --pastel-rosa: #f9d5e5;
+      --pastel-rosa-fuerte: #f497b6;
+      --pastel-lavanda: #e6e6fa;
+      --pastel-blanco: #fff9fb;
+      --gris-suave: #4a4a4a;
+    }
+
+    body {
+      background-color: var(--pastel-blanco);
+      font-family: 'Segoe UI', sans-serif;
+      color: var(--gris-suave);
+    }
+
+    h1, h2, h3 {
+      color: var(--pastel-rosa-fuerte);
+    }
+
+    .button, input[type="submit"] {
+      background-color: var(--pastel-rosa-fuerte);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 0.6em 1.5em;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .button:hover, input[type="submit"]:hover {
+      background-color: #e17ca1;
+    }
+
+    .box {
+      background-color: #fff0f5;
+      border-radius: 15px;
+      padding: 2em;
+      margin-bottom: 2em;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .features-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      justify-content: space-between;
+    }
+
+    .features-row section {
+      background-color: #ffeef4;
+      padding: 1em;
+      border-radius: 12px;
+      flex: 1 1 calc(50% - 1em);
+    }
+
+    #chatbot-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--pastel-rosa-fuerte);
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      border: none;
+      font-size: 26px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    #chatbot-window {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 320px;
+      height: 440px;
+      background: #fffafc;
+      border: 2px solid var(--pastel-rosa-fuerte);
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    #chatbot-header {
+      background-color: var(--pastel-rosa-fuerte);
+      color: white;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+
+    #chatbot-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    #chatbot-input {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+
+    #chatbot-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-bottom-left-radius: 16px;
+    }
+
+    #chatbot-input button {
+      background-color: var(--pastel-rosa-fuerte);
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-bottom-right-radius: 16px;
+      cursor: pointer;
+    }
+
+    footer {
+      background-color: var(--pastel-lavanda);
+      padding: 1em;
+      text-align: center;
+      border-top: 4px solid var(--pastel-rosa);
+    }
+
+    footer a {
+      color: var(--pastel-rosa-fuerte);
+    }
+
+    .image.featured img {
+      border-radius: 12px;
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body class="landing is-preload">
+  <div id="page-wrapper">
+    <header id="header" class="alt">
+      <h1><a href="index.html">Camino Hacia el Bienestar</a></h1>
+      <nav id="nav">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="#">Servicios</a></li>
+          <li><a href="#filosofia">Filosofía</a></li>
+          <li><a href="#equipo">Equipo</a></li>
+          <li><a href="#" class="button">Agendar Cita</a></li>
+        </ul>
+      </nav>
+    </header>
+
+	<section id="banner">
+	<h2>Camino Hacia el Bienestar</h2>
+	<p>Tu consultorio de confianza para la salud emocional</p>
+	<div style="text-align: center; margin-top: 1.5em;">
+		<button class="boton-agendar">Agendar ahora</button>
+	</div>
+	</section>
+
+
+    <section id="main" class="container">
+      <section class="box">
+        <header class="major">
+          <h2>Tu espacio de crecimiento emocional</h2>
+          <p>Acompañamiento terapéutico en todas las etapas de la vida</p>
+        </header>
+        <span class="image featured"><img src="images/terapia_individual.jpg" alt="Terapia Individual" /></span>
+      </section>
+
+      <section class="box features">
+        <div class="features-row">
+          <section>
+            <span class="icon solid fa-heart"></span>
+            <h3>Terapia Individual</h3>
+            <p>Atención empática para adultos, adolescentes y niños.</p>
+          </section>
+          <section>
+            <span class="icon solid fa-people-arrows"></span>
+            <h3>Terapia de Pareja</h3>
+            <p>Fortalecimiento del vínculo, escucha activa y comunicación efectiva.</p>
+          </section>
+        </div>
+        <div class="features-row">
+          <section>
+            <span class="icon solid fa-child"></span>
+            <h3>Estimulación Temprana</h3>
+            <p>Desarrollo integral para la primera infancia con técnicas especializadas.</p>
+          </section>
+          <section>
+            <span class="icon solid fa-comments"></span>
+            <h3>Consultas Online</h3>
+            <p>Comodidad, privacidad y accesibilidad desde cualquier lugar.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="box" id="filosofia">
+        <header class="major">
+          <h2>Nuestra Filosofía</h2>
+          <p>Creemos en el poder del acompañamiento emocional basado en la escucha, el respeto y la empatía. Nuestra meta es ayudarte a encontrar tu propio camino hacia el bienestar.</p>
+        </header>
+      </section>
+
+      <section class="box" id="equipo">
+        <header class="major">
+          <h2>Nuestro Equipo</h2>
+          <p>Contamos con un equipo interdisciplinario de psicólogas, terapeutas de lenguaje, especialistas en infancia y terapeutas de pareja, todos comprometidos con tu proceso.</p>
+        </header>
+        <span class="image featured"><img src="images/equipo_profesionales.jpg" alt="Nuestro equipo" /></span>
+      </section>
+    </section>
+
+    <footer>
+      <ul class="icons">
+        <li><a href="#" class="icon brands fa-facebook-f"></a></li>
+        <li><a href="#" class="icon brands fa-instagram"></a></li>
+      </ul>
+      <p>&copy; 2025 Camino Hacia el Bienestar. Todos los derechos reservados.</p>
+    </footer>
+
+    <button id="chatbot-btn" title="Chatea con nosotros">
+      <i class="fas fa-comment-dots"></i>
+    </button>
+
+    <div id="chatbot-window">
+      <div id="chatbot-header">CaminoBot</div>
+      <div id="chatbot-messages">
+        <p><strong>CaminoBot:</strong> ¡Hola! ¿En qué puedo ayudarte hoy?</p>
+      </div>
+      <div id="chatbot-input">
+        <input type="text" placeholder="Escribe tu mensaje..." />
+        <button><i class="fa fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("chatbot-btn").onclick = () => {
+      const win = document.getElementById("chatbot-window");
+      win.style.display = win.style.display === "none" || win.style.display === "" ? "flex" : "none";
+    };
+  </script>
+
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/jquery.dropotron.min.js"></script>
+  <script src="assets/js/jquery.scrollex.min.js"></script>
+  <script src="assets/js/browser.min.js"></script>
+  <script src="assets/js/breakpoints.min.js"></script>
+  <script src="assets/js/util.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
