@@ -13,6 +13,7 @@
       --pastel-lavanda: #e6e6fa;
       --pastel-blanco: #fff9fb;
       --gris-suave: #4a4a4a;
+      --verde-claro: #dcf8c6;
     }
 
     body {
@@ -82,12 +83,14 @@
       position: fixed;
       bottom: 90px;
       right: 20px;
-      width: 320px;
-      height: 440px;
-      background: #fffafc;
+      width: 360px;
+      height: 500px;
+      background: url('images/chat-bg.png') no-repeat center center;
+      background-size: cover;
       border: 2px solid var(--pastel-rosa-fuerte);
       border-radius: 18px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      display: flex;
       flex-direction: column;
       z-index: 1000;
     }
@@ -107,6 +110,29 @@
       padding: 10px;
       overflow-y: auto;
       font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .user-message {
+      background-color: var(--verde-claro);
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+
+    .bot-message {
+      background-color: white;
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
     }
 
     #chatbot-input {
@@ -225,7 +251,7 @@
       </section>
     </section>
 
-    <footer>
+     <footer>
       <ul class="icons">
         <li><a href="#" class="icon brands fa-facebook-f"></a></li>
         <li><a href="#" class="icon brands fa-instagram"></a></li>
@@ -233,35 +259,159 @@
       <p>&copy; 2025 Camino Hacia el Bienestar. Todos los derechos reservados.</p>
     </footer>
 
+    <!-- Botón Chat -->
     <button id="chatbot-btn" title="Chatea con nosotros">
       <i class="fas fa-comment-dots"></i>
     </button>
 
+    <!-- Ventana de Chatbot -->
     <div id="chatbot-window">
       <div id="chatbot-header">CaminoBot</div>
       <div id="chatbot-messages">
-        <p><strong>CaminoBot:</strong> ¡Hola! ¿En qué puedo ayudarte hoy?</p>
+        <div class="bot-message message">¡Hola! ¿En qué puedo ayudarte hoy?</div>
       </div>
       <div id="chatbot-input">
-        <input type="text" placeholder="Escribe tu mensaje..." />
-        <button><i class="fa fa-paper-plane"></i></button>
+        <input type="text" id="user-input" placeholder="Escribe tu mensaje..." />
+
+        <!-- Botón micrófono -->
+        <button id="mic-btn" title="Hablar">
+          <i class="fa fa-microphone"></i>
+        </button>
+
+        <!-- Botón enviar -->
+        <button onclick="enviarMensaje()" title="Enviar">
+          <i class="fa fa-paper-plane"></i>
+        </button>
       </div>
     </div>
   </div>
 
-  <script>
-    document.getElementById("chatbot-btn").onclick = () => {
-      const win = document.getElementById("chatbot-window");
-      win.style.display = win.style.display === "none" || win.style.display === "" ? "flex" : "none";
+<script>
+  const user_id = crypto.randomUUID();
+  const input = document.getElementById("user-input");
+  const micBtn = document.getElementById("mic-btn");
+  let recognizing = false;
+  let recognition;
+
+  // Mostrar / ocultar chatbot
+  document.getElementById("chatbot-btn").onclick = () => {
+    const win = document.getElementById("chatbot-window");
+    win.style.display = win.style.display === "none" || win.style.display === "" ? "flex" : "none";
+  };
+
+  // Enviar mensaje al presionar Enter
+  input.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      enviarMensaje();
+    }
+  });
+
+  async function enviarMensaje() {
+    const mensaje = input.value.trim();
+    if (!mensaje || input.disabled) return;
+
+    const contenedor = document.getElementById("chatbot-messages");
+
+    const userMsg = document.createElement("div");
+    userMsg.className = "message user-message";
+    userMsg.textContent = mensaje;
+    contenedor.appendChild(userMsg);
+    contenedor.scrollTop = contenedor.scrollHeight;
+
+    input.value = "";
+    input.disabled = true;
+
+    const typingMsg = document.createElement("div");
+    typingMsg.className = "message bot-message";
+    typingMsg.innerHTML = `<span class="dot-typing">...</span>`;
+    contenedor.appendChild(typingMsg);
+    contenedor.scrollTop = contenedor.scrollHeight;
+
+    try {
+      const res = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id, mensaje })
+      });
+
+      const data = await res.json();
+      contenedor.removeChild(typingMsg);
+
+      const botMsg = document.createElement("div");
+      botMsg.className = "message bot-message";
+      botMsg.textContent = data.respuesta || "Lo siento, no pude procesar tu mensaje.";
+      contenedor.appendChild(botMsg);
+      contenedor.scrollTop = contenedor.scrollHeight;
+    } catch (error) {
+      contenedor.removeChild(typingMsg);
+      const errMsg = document.createElement("div");
+      errMsg.className = "message bot-message";
+      errMsg.textContent = "Error de conexión con el servidor.";
+      contenedor.appendChild(errMsg);
+    }
+
+    input.disabled = false;
+    input.focus();
+  }
+
+  // Reconocimiento de voz
+  if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.lang = 'es-PE';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    micBtn.addEventListener("click", () => {
+      try {
+        if (!recognizing) {
+          recognition.start(); // El estado cambia solo si inicia correctamente
+        } else {
+          recognition.stop();
+        }
+      } catch (err) {
+        console.error("Error al iniciar reconocimiento:", err);
+        micBtn.classList.remove("listening");
+        recognizing = false;
+      }
+    });
+
+    recognition.onstart = () => {
+      recognizing = true;
+      micBtn.classList.add("listening");
+      input.placeholder = "🎙️ Escuchando...";
+      console.log("🎙️ Reconocimiento iniciado.");
     };
-  </script>
+
+    recognition.onresult = function (event) {
+      const texto = event.results[0][0].transcript.trim();
+      console.log("📝 Texto reconocido:", texto);
+      if (texto) {
+        input.value = texto;
+        enviarMensaje();
+      }
+    };
+
+    recognition.onerror = function (event) {
+      console.warn("❌ Error en reconocimiento:", event.error);
+    };
+
+    recognition.onend = () => {
+      recognizing = false;
+      micBtn.classList.remove("listening");
+      input.placeholder = "Escribe tu mensaje...";
+      console.log("🛑 Reconocimiento finalizado.");
+    };
+  } else {
+    micBtn.style.display = "none";
+    console.warn("⚠️ Este navegador no soporta reconocimiento de voz.");
+  }
+</script>
+
+
+
 
   <script src="assets/js/jquery.min.js"></script>
-  <script src="assets/js/jquery.dropotron.min.js"></script>
-  <script src="assets/js/jquery.scrollex.min.js"></script>
-  <script src="assets/js/browser.min.js"></script>
-  <script src="assets/js/breakpoints.min.js"></script>
-  <script src="assets/js/util.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
